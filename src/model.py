@@ -93,7 +93,6 @@ class Model:
         old_length = self.__compute_length()
         alarms = self.__add_edge(edge)
         self.recompute_base_cost([edge.effect])
-        #todo refit effect edges 
         new_length = self.__compute_length()
         if old_length > new_length:
             logging.debug(f"adding edge {edge}")

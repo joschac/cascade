@@ -44,7 +44,7 @@ class DistributionTemplate():
         assert len(unique_deltas) == 0 or min(unique_deltas) >= 0
         self.unique_deltas = unique_deltas
         self.unique_delta_counts = unique_delta_counts
-        self.skip_fraction = skip_fraction #TODO include skip fraction in the parameter cost.
+        self.skip_fraction = skip_fraction 
     def __repr__(self) -> str:
         return f"skip_fraction={self.skip_fraction}"
     def compute_cost_per_delay(self, delays):
@@ -125,7 +125,6 @@ class UniformDistributionCont(DistributionTemplate):
     def __init__(self, unique_deltas, unique_delta_counts, skip_fraction): 
         raise NotImplementedError("UniformDistributionCont not implemented yet!")
         super().__init__(unique_deltas, unique_delta_counts, skip_fraction)
-        # TODO 
 
 class GeometricDistribution(DistributionTemplate):
     def __init__(self, unique_deltas, unique_delta_counts, skips_fraction):

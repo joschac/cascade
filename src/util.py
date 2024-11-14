@@ -31,8 +31,8 @@ def universal_integer_encoding(i,c=2.865064):
 def universal_real_encoding(z,p):
     if globals.mle_bic:
         raise NotImplementedError('BUG - should not be called for MLE BIC')
-    try: #TODO fix this hack
-        s = math.ceil(math.log10((10**p)/z)) #TODO WHY LOG 10?
+    try: 
+        s = math.ceil(math.log10((10**p)/z)) # WHY LOG 10?
     except ZeroDivisionError:
         s = 1
     return universal_integer_encoding(s) + universal_integer_encoding(math.ceil(z*(10**s)))

@@ -60,8 +60,7 @@ def get_event_delays_old(data, topology_matrix, N=10, M=10, delta_t=1000, save_p
     if not effect_event_types:
         effect_event_types = eventtypes
 
-    #TODO: assert min delay < delta_t
-    #TODO: assert min_delay >= 0 ?
+    
 
     cause_start_times = [[[] for e in eventtypes] for d in devicetypes] #3D array of shape (nodes, events, [start timestamps])
     effect_start_times = [[[] for e in eventtypes] for d in devicetypes]
@@ -143,8 +142,6 @@ def get_event_delays(data, topology_matrix, N=10, M=10, delta_t=1000, save_path=
     if not effect_event_types:
         effect_event_types = eventtypes
 
-    #TODO: assert min delay < delta_t
-    #TODO: assert min_delay >= 0 ?
 
     cause_start_times = [[[] for e in eventtypes] for d in devicetypes] #3D array of shape (nodes, events, [start timestamps])
     effect_start_times = [[[] for e in eventtypes] for d in devicetypes]

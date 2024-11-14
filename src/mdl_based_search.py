@@ -29,7 +29,7 @@ def set_causal_prior_edges(causal_prior, delays, candidates, tested_candidates):
     causal_edges = np.where(causal_prior == 1)
     for cause, effect in zip(causal_edges[0], causal_edges[1]):
         # if cause != effect: # why was this here?
-        i = delays.where((delays['effect'] == effect) & (delays['cause'] == cause)).dropna().index[0] #should only be one #TODO change back to int once delays are updated
+        i = delays.where((delays['effect'] == effect) & (delays['cause'] == cause)).dropna().index[0] 
         if not tested_candidates[i]:
             candidates[i].gain_est = -np.inf # hack to add prior edges first
 
@@ -58,11 +58,11 @@ def search(alarms_df:pd.DataFrame, topology_matrix, causal_prior, no_topo=False)
             i = delays.where((delays['effect'] == effect) & (delays['cause'] == cause)).dropna().index[0]
             tested_candidates[i] = True
     
-    #TODO add checks for circles and causal prior etc 
+    
     # add edges from causal prior first?
     # skip edges that would violate causal prior
     while True:
-        while True:#TODO don't add edge already in graph, extend to no violation of causal prior and no circles anything else?
+        while True:
             edgeCand_pt = candidates.argmin() # using simple min instead of heap, since we have to re - heapify after each edge addition anyway
 
             if m.edges[candidates[edgeCand_pt].cause,candidates[edgeCand_pt].effect] == None and\
@@ -73,7 +73,7 @@ def search(alarms_df:pd.DataFrame, topology_matrix, causal_prior, no_topo=False)
             elif candidates[edgeCand_pt].gain_est > 0:
                 break
             else:
-                candidates[edgeCand_pt].gain_est = 1 #mark as already added #TODO with alreaded tested we can ignore that 
+                candidates[edgeCand_pt].gain_est = 1 
         edgeCand = candidates[edgeCand_pt]
         logging.debug(f"testing edge number {tested_candidates.sum()} / {tested_candidates.size}")
         if edgeCand.gain_est < 0:
@@ -87,9 +87,9 @@ def search(alarms_df:pd.DataFrame, topology_matrix, causal_prior, no_topo=False)
             # update_index = delays.where((delays['effect'] == edge.effect)).dropna().index
             update_index = new_delays.index
             candidates[update_index] = score_all_edges.score_all_edges(delays.loc[update_index],base_cost, m.alarm_counts,m)
-            candidates[edgeCand_pt].gain_est = 1 # mark as already tested #TODO will reset after another edge with same effect is added, maybe this makes sense?
+            candidates[edgeCand_pt].gain_est = 1 # mark as already tested 
             tested_candidates[edgeCand_pt] = True
-            set_causal_prior_edges(causal_prior, delays, candidates, tested_candidates) #TODO not a fan of resetting them every iteration
+            set_causal_prior_edges(causal_prior, delays, candidates, tested_candidates) 
         else:
             break
 
@@ -97,10 +97,6 @@ def search(alarms_df:pd.DataFrame, topology_matrix, causal_prior, no_topo=False)
 
 
 def topological_search(alarms_df:pd.DataFrame, topology_matrix, causal_prior, init_with_self_loops=False):
-    '''
-    TODO causal prior is ignored for now
-    '''
-    
     unique_alarms = np.arange(causal_prior.shape[0])
 
     G, device_dict = dl.all_data_graph(alarms_df, topology_matrix)
@@ -114,7 +110,7 @@ def topological_search(alarms_df:pd.DataFrame, topology_matrix, causal_prior, in
     candidate_cause  = np.vectorize(lambda candidate: candidate.cause)(candidates)
     candidate_effect = np.vectorize(lambda candidate: candidate.effect)(candidates)
 
-    tested_candidates = np.zeros(len(candidates), dtype=bool) #TODO still needed? 
+    tested_candidates = np.zeros(len(candidates), dtype=bool) # not needed anymore?
     
     added_nodes = set()
     while len(added_nodes) < len(unique_alarms): 
@@ -129,7 +125,6 @@ def topological_search(alarms_df:pd.DataFrame, topology_matrix, causal_prior, in
             edgeCand_pt = next_node_candidates.argmin()
             edgeCand = next_node_candidates[edgeCand_pt]
             edge = edgeCand.get_edge()
-            #TODO right candidate used etc?? 
             
             removed_edges = m.remove_effect_edges(edgeCand.effect) if edgeCand.gain_est < np.inf else [] 
 
@@ -187,7 +182,7 @@ def topological_search(alarms_df:pd.DataFrame, topology_matrix, causal_prior, in
                 update_index = new_delays.index
                 candidates[update_index] = score_all_edges.score_all_edges(delays.loc[update_index],m.base_cost, m.alarm_counts,m)
                 next_node_candidates = candidates[next_node_candidates_pt]
-                next_node_candidates[edgeCand_pt].gain_est = np.inf # mark as already tested #TODO will reset after another edge with same effect is added, maybe this makes sense?
+                next_node_candidates[edgeCand_pt].gain_est = np.inf 
 
             else:
                 break

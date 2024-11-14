@@ -1,9 +1,7 @@
 import numpy as np
 
-def __find_next(score_lookup):
-    pass #TODO 
 
-def __find_topological_order(score_lookup, candidate_sinks, break_after_first=False): #TODO remvoe break after first
+def __find_topological_order(score_lookup, candidate_sinks, break_after_first=False): 
     topological_order = []
     while len(candidate_sinks) > 0:
         worst_best_gain = - np.inf
@@ -56,9 +54,6 @@ def get_next_node(candidates, added_notes=set()):
     # return the node with the smallest delta
     return unique_nodes[np.argmin(optimal_delta_per_node)]
 
-
-
-    return __find_topological_order(score_lookup, list(candidate_sinks - added_notes), break_after_first=True)[0] #TODO refactor 
     
 
 def find_topological_order(edge_scores):
@@ -74,7 +69,7 @@ def find_topological_order(edge_scores):
     '''
     score_lookup = {}
     for index, row in edge_scores.iterrows():
-        score_lookup[(row['x'],row['y'])] = row['opt_save_est'] #TODO refactor to match out of score_all_edges
+        score_lookup[(row['x'],row['y'])] = row['opt_save_est'] 
     candidate_sinks = list(edge_scores['x'].unique())
 
     return __find_topological_order(score_lookup, candidate_sinks)
