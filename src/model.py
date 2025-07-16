@@ -317,7 +317,7 @@ class Model:
                     for i in np.argsort(delays_costs):
                         pc = potential_causes[i]
                         d_cost = delays_costs[i]
-                        if d_cost < self.all_alarms_cost[a]:
+                        if d_cost + 1.1e-7 < self.all_alarms_cost[a]:
                             if self.check_if_cause_avialiable(pc, a, edge.cause, edge.effect):
                                 self.all_alarms[a,4:] = n.id, self.all_alarms[pc,1], alarm_delays[i], edge.cause, edge.effect 
                                 self.all_alarms_cost[a] = d_cost
